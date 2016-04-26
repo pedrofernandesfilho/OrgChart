@@ -1,0 +1,27 @@
+html, body { height: 100% }
+
+header { /*border:1px solid #f00;*/ }
+header div {
+  /*border:1px solid #000;*/
+  display:table-cell;
+  vertical-align:middle
+}
+header div h1 { padding-left:55px }
+header div.logo {
+  float:left;
+  width:323px;
+  height:105px;
+  background-image: url(../imgs/logo.png)
+}
+header div.title {
+  padding-left:323px;
+  text-align:center
+}
+
+main {
+  /*height:100%;*/
+  top:25px;
+  bottom:25px;
+  width:100%;
+  overflow-x:scroll
+}

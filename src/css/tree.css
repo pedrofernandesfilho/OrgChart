@@ -1,34 +1,6 @@
 /* CSS adapted from: http://thecodeplayer.com/walkthrough/css3-family-tree */
 * {margin: 0; padding: 0;}
 
-html, body { height: 100% }
-
-header { /*border:1px solid #f00;*/ }
-header div {
-  /*border:1px solid #000;*/
-  display:table-cell;
-  vertical-align:middle
-}
-header div h1 { padding-left:55px }
-header div.logo {
-  float:left;
-  width:323px;
-  height:105px;
-  background-image: url(../imgs/logo.png)
-}
-header div.title {
-  padding-left:323px;
-  text-align:center
-}
-
-.body {
-  /*height:100%;*/
-  top:25px;
-  bottom:25px;
-  width:100%;
-  overflow-x:scroll
-}
-
 .tree ul {
 	padding-top: 20px; position: relative;
 	
@@ -100,13 +72,13 @@ right connector from last child*/
 	width: 0; height: 20px;
 }
 
-.tree li a{
+.tree li a {
 	border: 1px solid #ccc;
 	padding: 5px 10px;
 	text-decoration: none;
 	color: #666;
 	font-family: arial, verdana, tahoma;
-	font-size: 11px;
+	font-size: 20px;
 	display: inline-block;
 	
 	border-radius: 5px;
@@ -118,6 +90,14 @@ right connector from last child*/
 	-moz-transition: all 0.5s;
 
   margin:0 5px;
+
+  min-width:150px;
+  min-height:50px
+}
+
+.tree li a span {
+  font-style:italic;
+  font-size:17px
 }
 
 /*Time for some hover effects*/

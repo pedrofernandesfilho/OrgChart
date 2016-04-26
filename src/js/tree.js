@@ -9,7 +9,11 @@ function buildTree(rootElement, data, visibleUntil) {
     , a = document.createElement("a")
     , li = document.createElement("li");
 
-  a.appendChild(text);
+  a.appendChild(document.createTextNode(data.position));
+  a.appendChild(document.createElement("br"));
+  var span = document.createElement("span");
+  span.appendChild(document.createTextNode(data.name));
+  a.appendChild(span);
   li.appendChild(a);
 
   if (rootElement.tagName == "ul")
@@ -30,6 +34,7 @@ function buildTreeSubItems(rootElement, items, amountVisible) {
   var ul = document.createElement("ul")
     , text, a, li;
 
+  // TODO: Create expand button
   if (amountVisible == 0)
     ul.className = "hide";
   else
