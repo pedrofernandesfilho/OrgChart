@@ -5,13 +5,12 @@
 })();
 
 function buildTree(rootElement, data, visibleUntil) {
-  var text = document.createTextNode(data.position)
-    , a = document.createElement("a")
+  var a = document.createElement("a")
+    , span = document.createElement("span")
     , li = document.createElement("li");
 
   a.appendChild(document.createTextNode(data.position));
   a.appendChild(document.createElement("br"));
-  var span = document.createElement("span");
   span.appendChild(document.createTextNode(data.name));
   a.appendChild(span);
   li.appendChild(a);
@@ -32,7 +31,7 @@ function buildTreeSubItems(rootElement, items, amountVisible) {
   if (items.length == 0) return;
 
   var ul = document.createElement("ul")
-    , text, a, li;
+    , a, span, li;
 
   // TODO: Create expand button
   if (amountVisible == 0)
@@ -42,14 +41,17 @@ function buildTreeSubItems(rootElement, items, amountVisible) {
   
   rootElement.appendChild(ul);
 
-  for(var i in items)
-  {
-    text = document.createTextNode(items[i].position);
-    a = document.createElement("a");
-    li = document.createElement("li");
+  for(var i in items) {
+    a = document.createElement("a")
+    span = document.createElement("span")
+    li = document.createElement("li")
 
-    a.appendChild(text);
+    a.appendChild(document.createTextNode(items[i].position));
+    a.appendChild(document.createElement("br"));
+    span.appendChild(document.createTextNode(items[i].name));
+    a.appendChild(span);
     li.appendChild(a);
+
     ul.appendChild(li);
 
     buildTreeSubItems(li, items[i].subordinates, amountVisible);
@@ -59,13 +61,13 @@ function buildTreeSubItems(rootElement, items, amountVisible) {
 function adjustWidth(treeElement) {
   treeElement.style.width = "100000px";
   
-  var width = [];
+  var widths = [];
   
   $(treeElement).find("ul").not(".hide").each(function() {
-    width.push($(this).width());
+    widths.push($(this).width());
   });
   
-  width.sort(function(a, b) { return b - a; });
+  widths.sort(function(a, b) { return b - a; });
 
-  treeElement.style.width = width[1] + "px";
+  treeElement.style.width = widths[1] + "px";
 }
