@@ -13,14 +13,14 @@
     <h1>OrgChart</h1>
   </header>
   <main>
-    <div class="tree" id="tree"></div>
+    <div id="chart"></div>
   </main>
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="js/orgChartData.json.js"></script>
   <script src="js/orgChart.js"></script>
   <script>
     (function() {
-      var orgChart = new OrgChart(orgChartData, { elementWrapperId: "tree" });
+      var orgChart = new OrgChart(orgChartData, { wrapperElementId: "chart" });
     }());
   </script>
 </body></html>

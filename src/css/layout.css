@@ -1,21 +1,23 @@
-html, body { height: 100% }
+html, body { height:100% }
 
 body {
-  display: flex;
-  flex-direction: column
+  display:flex;
+  flex-direction:column
 }
 
 header {
-  flex: 0 0 auto;
-  border-bottom: 1px dotted #000}
+  border-bottom:1px dotted #000;
+  flex:0 0 auto;
+  text-align:center
+}
 
 header img {
-  float: left;
-  margin-right: 35px
+  float:left;
+  /*margin-right:35px*/
 }
 
 main {
-  flex: 1 1 auto;
-  position: relative;
-  overflow: auto
+  flex:1 1 auto;
+  position:relative;
+  overflow:auto
 }

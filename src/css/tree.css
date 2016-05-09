@@ -1,6 +1,8 @@
 /* CSS adapted from: http://thecodeplayer.com/walkthrough/css3-family-tree */
 * {margin: 0; padding: 0;}
 
+.tree { margin: auto }
+
 .tree ul {
 	padding-top: 20px; position: relative;
 	
@@ -63,7 +65,8 @@
 	text-decoration: none;
 	color: #222;
 	font-family: arial, verdana, tahoma;
-	font-size: 18px;
+	font-size: 16px;
+  font-weight:bold;
 	display: inline-block;
 	
 	border-radius: 5px;
@@ -82,10 +85,11 @@
 
 .tree li a span {
   font-style:italic;
-  font-size:17px
+  font-size:14px;
+  font-weight:normal;
 }
 
-.tree li a:hover, .tree li a:hover+ul li a {
+.tree li a:hover, .tree li a:hover+ul li a, .tree li a:hover+div+ul li a {
 	background: #c8e4f8;
   color: #000;
   border: 1px solid #94a0b4;

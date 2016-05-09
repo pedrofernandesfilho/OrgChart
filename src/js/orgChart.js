@@ -4,11 +4,12 @@
     // Public Properties
     this.data = null;
     this.options = null;
-    this.rootElement = null;
+    this.rootElementChart = null;
+    this.wrapperElementChart = null;
 
     // Options
     this.options = extend({
-        rootElementId: null
+        wrapperElementId: null
       , visibleUpToLevel: 4
     }, options);
 
@@ -17,43 +18,134 @@
   } // ctor
 
 
-  // Public methods
-
-
   // Private methods
   function _init(data) {
     this.data = data;
-    this.rootElement = this.options.rootElementId ? doc.getElementById(this.options.rootElementId) : doc.body;
+    this.rootElementChart = doc.createElement("div");
+    this.wrapperElementChart = this.options.wrapperElementId ? doc.getElementById(this.options.wrapperElementId) : doc.body;
 
-    // Build OrgChart
-    buildOrgChart.call(this, data, this.options.visibleUpToLevel, this.rootElement);
+    buildOrgChart.call(this, data, this.options.visibleUpToLevel, this.rootElementChart, this.wrapperElementChart);
+    adjustRootWidth.call(this, this.rootElementChart);
+    adjustItemsHeight.call(this, this.rootElementChart);
   }
 
-  function buildOrgChart(data, visibleUntil, rootElement) {
-    var a = document.createElement("a")
-      , span = document.createElement("span")
-      , li = document.createElement("li")
-      , df = document.createDocumentFragment();
+  function buildOrgChart(data, visibleUntil, rootElement, wrapperElement) {
+    var a = doc.createElement("a")
+      , span = doc.createElement("span")
+      , li = doc.createElement("li")
+      , df = doc.createDocumentFragment();
 
-    a.appendChild(document.createTextNode(data.position));
-    a.appendChild(document.createElement("br"));
-    span.appendChild(document.createTextNode(data.name));
+    a.appendChild(doc.createTextNode(data.position));
+    a.appendChild(doc.createElement("br"));
+    span.appendChild(doc.createTextNode(data.name));
     a.appendChild(span);
     li.appendChild(a);
 
-    buildOrgChartItems(li, data.subordinates, --visibleUntil);
+    buildOrgChartItems.call(this, li, data.subordinates, --visibleUntil);
 
     if (rootElement.tagName == "ul")
       df.appendChild(li);
     else {
-      var ul = document.createElement("ul");
+      var ul = doc.createElement("ul");
       ul.appendChild(li);
       df.appendChild(ul);
     }
 
+    if (rootElement.className) rootElement.className+= " tree"; else rootElement.className = "tree";
     rootElement.appendChild(df);
+    wrapperElement.appendChild(rootElement);
   }
 
+  function buildOrgChartItems(rootElement, items, amountVisible) {
+    if (items == null) return;
+    if (items.length == 0) return;
+
+    var ul = doc.createElement("ul")
+      , a, span, li, expand, img;
+
+    if (amountVisible == 0)
+      ul.className = "hide";
+    else
+      amountVisible--;
+    
+    rootElement.appendChild(ul);
+
+    for(var i in items) {
+      a = doc.createElement("a")
+      span = doc.createElement("span")
+      li = doc.createElement("li")
+
+      a.appendChild(doc.createTextNode(items[i].position));
+      a.appendChild(doc.createElement("br"));
+      span.appendChild(doc.createTextNode(items[i].name));
+      a.appendChild(span);
+      li.appendChild(a);
+
+      if ((amountVisible == 0) && (items[i].subordinates.length > 0)) {
+        img = doc.createElement("img");
+        img.src = "imgs/plus.gif";
+        expand = doc.createElement("div");
+        expand.appendChild(img);
+        expand.onclick = expandOnClick.bind(this, expand);
+        li.appendChild(expand);
+      }
+
+      ul.appendChild(li);
+
+      if (items[i].subordinates.length > 0)
+        buildOrgChartItems.call(this, li, items[i].subordinates, amountVisible);
+    }
+  }
+
+  function adjustRootWidth(rootElement) {
+    rootElement.style.width = "100000px";
+    
+    var widths = [];
+    
+    // TODO: Rewrite without jQuery
+    $(rootElement).find("ul").not(".hide").each(function() {
+      widths.push($(this).width());
+    });
+    
+    widths.sort(function(a, b) { return b - a; });
+
+    rootElement.style.width = widths[1] + "px";
+  }
+
+  function adjustItemsHeight(rootElement) {
+    var heights = [];
+    var as = rootElement.getElementsByTagName("a");
+    
+    for (var i in as) heights.push(as[i].clientHeight);
+
+    heights.sort(function(a, b) { return b - a; });
+
+    for (var i = 0; i < as.length; i++)
+      as[i].style.height = (heights[0]-10) + "px";
+  }
+
+  function expandOnClick(source, event) {
+    if (source.getAttribute("data-expanded") == "true") {
+      source.parentElement.getElementsByTagName("ul")[0].className = "hide";
+      source.getElementsByTagName("img")[0].src = "imgs/plus.gif";
+      source.setAttribute("data-expanded", "false");
+    } else {
+      source.parentElement.getElementsByTagName("ul")[0].className = "";
+      source.getElementsByTagName("img")[0].src = "imgs/minus.gif";
+      source.setAttribute("data-expanded", "true");
+    }
+    
+    adjustRootWidth.call(this, this.rootElementChart);
+    centerOnScreen.call(this, source);
+  }
+
+  function centerOnScreen(element) {
+    var prevSiblingRect = element.previousElementSibling.getBoundingClientRect();
+    var elementScroll = this.wrapperElementChart == doc.body ? this.wrapperElementChart : this.wrapperElementChart.parentElement;
+
+    elementScroll.scrollTop = prevSiblingRect.y;
+    elementScroll.scrollLeft = prevSiblingRect.x + elementScroll.scrollLeft - (elementScroll.offsetWidth - prevSiblingRect.width) / 2;
+  }
 
   // Useful private methods
   function extend(target, source) {
@@ -65,95 +157,3 @@
     return target;
   }
 }(document));
-
-/*(function() {
-  var treeElement = document.getElementById("tree");
-  buildTree(treeElement, dataTreeJson, 4);
-  adjustWidth(treeElement);
-  adjustHeight(treeElement);
-})();*/
-
-
-function buildTreeSubItems(rootElement, items, amountVisible) {
-  if (items == null) return;
-  if (items.length == 0) return;
-
-  var ul = document.createElement("ul")
-    , a, span, li, expand;
-
-  if (amountVisible == 0)
-    ul.className = "hide";
-  else
-    amountVisible--;
-  
-  rootElement.appendChild(ul);
-
-  for(var i in items) {
-    a = document.createElement("a")
-    span = document.createElement("span")
-    li = document.createElement("li")
-
-    a.appendChild(document.createTextNode(items[i].position));
-    a.appendChild(document.createElement("br"));
-    span.appendChild(document.createTextNode(items[i].name));
-    a.appendChild(span);
-    li.appendChild(a);
-
-    // TODO: Create expand button
-    if (amountVisible == 0) {
-      expand = document.createElement("div");
-      expand.appendChild(document.createTextNode("[+]"));
-      expand.onclick = expandOnClick;
-      li.appendChild(expand);
-    }
-
-    ul.appendChild(li);
-
-    buildTreeSubItems(li, items[i].subordinates, amountVisible);
-  }
-}
-
-function adjustWidth() {
-  var treeElement = document.getElementById("tree");
-
-  treeElement.style.width = "100000px";
-  
-  var widths = [];
-  
-  $(treeElement).find("ul").not(".hide").each(function() {
-    widths.push($(this).width());
-  });
-  
-  widths.sort(function(a, b) { return b - a; });
-
-  treeElement.style.width = widths[1] + "px";
-}
-
-function adjustHeight(treeElement) {
-  var heights = [];
-
-  var as = treeElement.getElementsByTagName("a");
-  
-  for (var i in as) heights.push(as[i].clientHeight);
-
-  heights.sort(function(a, b) { return b - a; });
-
-  for (var i = 0; i < as.length; i++)
-    as[i].style.height = (heights[0]-10) + "px";
-}
-
-function expandOnClick(e) {
-  //alert("expandOnClick " + e);
-  console.log(e);
-  console.log(this);
-
-  this.style.background = "#f00";
-
-  console.log(this.parentElement);
-  console.log(this.parentElement.getElementsByTagName("ul"));
-  this.parentElement.getElementsByTagName("ul")[0].className = "";
-
-  this.contentText = "[-]";
-
-  adjustWidth();
-}
