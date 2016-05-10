@@ -8,7 +8,12 @@ body {
 header {
   border-bottom:1px dotted #000;
   flex:0 0 auto;
-  text-align:center
+}
+
+header div {
+  margin:0 auto;
+  max-width:50%;
+  text-align:center;
 }
 
 header img {

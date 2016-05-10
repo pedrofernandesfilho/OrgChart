@@ -14,19 +14,19 @@
     }, options);
 
     // Init
-    _init.call(this, data);
+    init.call(this, data);
   } // ctor
 
 
   // Private methods
-  function _init(data) {
+  function init(data) {
     this.data = data;
     this.rootElementChart = doc.createElement("div");
     this.wrapperElementChart = this.options.wrapperElementId ? doc.getElementById(this.options.wrapperElementId) : doc.body;
 
     buildOrgChart.call(this, data, this.options.visibleUpToLevel, this.rootElementChart, this.wrapperElementChart);
     adjustRootWidth.call(this, this.rootElementChart);
-    adjustItemsHeight.call(this, this.rootElementChart);
+    //adjustItemsHeight.call(this, this.rootElementChart);
   }
 
   function buildOrgChart(data, visibleUntil, rootElement, wrapperElement) {
@@ -116,7 +116,9 @@
     var heights = [];
     var as = rootElement.getElementsByTagName("a");
     
-    for (var i in as) heights.push(as[i].clientHeight);
+    for (var i in as)
+      if (as.hasOwnProperty(i))
+        heights.push(as[i].clientHeight);
 
     heights.sort(function(a, b) { return b - a; });
 
@@ -143,8 +145,8 @@
     var prevSiblingRect = element.previousElementSibling.getBoundingClientRect();
     var elementScroll = this.wrapperElementChart == doc.body ? this.wrapperElementChart : this.wrapperElementChart.parentElement;
 
-    elementScroll.scrollTop = prevSiblingRect.y;
-    elementScroll.scrollLeft = prevSiblingRect.x + elementScroll.scrollLeft - (elementScroll.offsetWidth - prevSiblingRect.width) / 2;
+    elementScroll.scrollTop = prevSiblingRect.top;
+    elementScroll.scrollLeft = prevSiblingRect.left + elementScroll.scrollLeft - (elementScroll.offsetWidth - prevSiblingRect.width) / 2;
   }
 
   // Useful private methods

@@ -77,9 +77,9 @@
 	-webkit-transition: all 0.5s;
 	-moz-transition: all 0.5s;
 
-  margin: 0 5px;
+  margin: 0 2px;
 
-  width: 119px;
+  width: 100px;
   min-height: 70px
 }
 
@@ -94,4 +94,4 @@
   color: #000;
   border: 1px solid #94a0b4;
 }
-.tree li a:hover+ul li::after, .tree li a:hover+ul li::before, .tree li a:hover+ul::before, .tree li a:hover+ul ul::before{ border-color:  #94a0b4; }
+.tree li a:hover+ul li::after, .tree li a:hover+ul li::before, .tree li a:hover+ul::before, .tree li a:hover+ul ul::before{ border-color: #94a0b4; }
