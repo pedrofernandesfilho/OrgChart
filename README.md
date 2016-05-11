@@ -1,6 +1,6 @@
 # Organizational Chart
 
-The purpose is create a tool to show dynamic org chart.
+A tool to show dynamic org chart.
 
 # Contributions
 
