@@ -1,3 +1,11 @@
+/* OrgChart
+ * 
+ * By Pedro Fernandes Filho
+ * License: MIT
+ *
+ * http://github.com/pedrofernandesfilho/OrgChart
+ */
+
 ;(function(doc) {
   // ctor
   this.OrgChart = function(data, options) {
