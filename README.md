@@ -8,8 +8,8 @@ Contributions are welcome!
 
 # To Do
 
- - Remove JQuery dependence
- - Use Bower for Normalizecss
+ - Remove the dependency of JQuery
+ - Use Bower to Normalizecss
 
 # References
 
